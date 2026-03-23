@@ -15,12 +15,20 @@ const CameraCapture = ({ userId }) => {
   const [error, setError] = useState(null);
   const [stream, setStream] = useState(null);
 
+  // 🔥 NEW: camera mode state
+  const [facingMode, setFacingMode] = useState("environment");
+
   const startCamera = async () => {
     try {
       stopCamera();
-      const newStream = await navigator.mediaDevices.getUserMedia({ video: true });
+
+      const newStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode }
+      });
+
       setStream(newStream);
       if (videoRef.current) videoRef.current.srcObject = newStream;
+
     } catch {
       setError("Error accessing camera.");
     }
@@ -68,9 +76,9 @@ const CameraCapture = ({ userId }) => {
 
     try {
       const res = await axios.post(
-    `https://nutriconnect-production.up.railway.app/api/ocr/${userId}`,
-    formData
-);
+        `https://nutriconnect-production.up.railway.app/api/ocr/${userId}`,
+        formData
+      );
 
       setOcrResult(res.data.text || "");
       setNutritionData(res.data.nutrition || {});
@@ -81,6 +89,13 @@ const CameraCapture = ({ userId }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // 🔥 NEW: flip camera
+  const flipCamera = () => {
+    setFacingMode((prev) =>
+      prev === "environment" ? "user" : "environment"
+    );
   };
 
   return (
@@ -108,6 +123,11 @@ const CameraCapture = ({ userId }) => {
 
         <button onClick={stopCamera} className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white font-semibold">
           Stop ⏹
+        </button>
+
+        {/* 🔥 NEW BUTTON */}
+        <button onClick={flipCamera} className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg text-white font-semibold">
+          Flip Camera 🔄
         </button>
 
         <button onClick={sendImageToBackend} className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white font-semibold">
