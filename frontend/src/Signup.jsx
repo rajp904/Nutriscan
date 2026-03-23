@@ -18,7 +18,7 @@ const Signup = ({ setShowLogin }) => {
 
   const handleSignup = async () => {
     try {
-      await axios.post("http://localhost:5001/api/auth/signup", form);
+      await axios.post("https://nutriconnect-production.up.railway.app/api/auth/signup", form);
       alert("✅ Signup successful!");
       setShowLogin(true);
     } catch (err) {
