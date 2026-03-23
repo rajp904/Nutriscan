@@ -46,7 +46,7 @@ const extractNutritionData = (text) => {
 
   const regexPatterns = {
     calories: /calories[^0-9]*([\d]+)/i,
-    fat: /(total\s*fat|fat)[^0-9]*([\d.]+)/i,
+    fat: /(total\s*fat|fat)[^\d]*([0-9]+(?:\.[0-9]+)?)\s*g/i,
     protein: /protein[^0-9]*([\d.]+)/i,
     carbs: /(total\s*carbohydrate|carbs?)[^0-9]*([\d.]+)/i,
     sugar: /sugars?[^0-9]*([\d.]+)/i,
