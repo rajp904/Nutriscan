@@ -52,9 +52,9 @@ const extractNutritionData = (text) => {
     })(),
     
     protein: /protein[^0-9]*([\d.]+)/i,
-    carbs: /(total\s*carbohydrate|carbs?)[^0-9]*([\d.]+)/i,
+    carbs: /total\s*carb[^0-9]*([0-9]{1,3})(?=\s*g)/i,
     sugar: /sugars?[^0-9]*([\d.]+)/i,
-    fiber: /fiber[^0-9]*([\d.]+)/i,
+    fiber: /(dietary\s*fiber|fiber)[^0-9]*([0-9]{1,3})(?=\s*g)/i,
     sodium: /sodium[^0-9]*([\d.]+)/i,
     servingSize: /serv(?:ing)?\s*size[^0-9]*([\d.]+)/i,
   };
