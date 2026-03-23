@@ -1,0 +1,71 @@
+/* FULL WIDTH PAGE */
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* MAIN CONTAINER */
+.app-container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 20px;
+  text-align: center;
+}
+
+/* TITLE */
+.app-title {
+  font-size: 32px;
+  margin-bottom: 15px;
+}
+
+/* 🔵 ALL BUTTONS SAME (BLUE STYLE) */
+button {
+  background: #1976d2;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin: 5px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+/* 🔴 LOGOUT (optional red) */
+.logout-btn {
+  background: red;
+}
+
+/* 📦 CAMERA SECTION SPACING */
+.camera-container {
+  margin-top: 20px;
+}
+
+/* 🍎 NUTRITION RESULT CARD */
+.nutrition-results {
+  background-color: #ffffff;
+  color: #000000;
+  padding: 20px;
+  margin: 30px auto;
+  border-radius: 12px;
+  max-width: 600px;
+  text-align: left;
+}
+
+/* DARK MODE SUPPORT */
+@media (prefers-color-scheme: dark) {
+  .nutrition-results {
+    background-color: #111;
+    color: #ffffff;
+  }
+}
+
+/* LIST STYLE */
+.nutrition-results ul {
+  list-style: none;
+  padding: 0;
+}
+

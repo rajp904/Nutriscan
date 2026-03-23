@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+/* RESET */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: auto;
+}
+
+/* ROOT THEME */
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color: inherit; /* 🔥 FIX */
+  background-color: #242424;
+}
+
+/* ❌ REMOVE FLEX BUG */
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  display: block; /* 🔥 IMPORTANT FIX */
+}
+
+/* DARK MODE SAFE */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #000;
+    color: white;   /* ✅ FIX */
+  }
+}
