@@ -12,31 +12,36 @@ const app = express();
 
 // ✅ Middleware
 app.use(express.json());
+
+// Improved CORS setup – this fixes most Railway + Vercel issues
 app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST", "PUT", "DELETE"]
+  origin: process.env.FRONTEND_URL || "*",   // Use env var in production → set in Railway dashboard
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,                         // Needed if using cookies or auth headers with credentials
 }));
+
+// Very important for Railway: Explicitly handle OPTIONS preflight requests
+app.options("*", cors());
 
 // ✅ File Upload Configuration
 const storage = multer.memoryStorage(); // Store image in memory
 const upload = multer({ storage });
 
 // ✅ Routes
+// Note: If your ocrRoutes uses multer upload, make sure it's applied per-route, not globally
 app.use("/api/auth", authRoutes);
 app.use("/api/ocr", ocrRoutes); // OCR uses multer
 
 // ✅ Root Route (For Testing)
 app.get("/", (req, res) => {
-  res.send("🚀 ScanEats API is running!");
+  res.send("🚀 ScanEats API is running!");   // ← assuming this is your project name
 });
 
-// ✅ MongoDB Connection
+// ✅ MongoDB Connection (modern way – flags are no longer needed)
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGO_URI);
     console.log("✅ Connected to MongoDB");
   } catch (error) {
     console.error("❌ MongoDB Connection Error:", error.message);
