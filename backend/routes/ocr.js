@@ -26,11 +26,12 @@ const preprocessImage = async (imagePath) => {
     let image = await Jimp.read(imagePath);
 
     await image
-      .resize(1000, Jimp.AUTO) // bigger image = better OCR
+      .resize(1200, Jimp.AUTO) // 🔥 improved size for better OCR
       .greyscale()
       .contrast(0.7)
       .normalize()
       .brightness(0.05)
+      .blur(1) // 🔥 reduce noise (fix misread like 5g → 59)
       .writeAsync(imagePath);
 
     console.log("✅ Image preprocessed successfully");
@@ -39,18 +40,14 @@ const preprocessImage = async (imagePath) => {
   }
 };
 
-// 🔥 IMPROVED extraction (more flexible)
+// 🔥 IMPROVED extraction (more flexible + fixed bugs)
 const extractNutritionData = (text) => {
   const nutrition = {};
   const cleanText = text.toLowerCase();
 
   const regexPatterns = {
     calories: /calories[^0-9]*([\d]+)/i,
-    fat: (() => {
-    const match = text.match(/total\s*fat[^\d]*([0-9]+)\s*g/i);
-    return match ? parseInt(match[1].replace(/^0+/, "") || "0") : 0;
-    })(),
-    
+    fat: /total\s*fat[^\d]*([0-9]{1,3})(?=\s*g)/i, // 🔥 FIXED
     protein: /protein[^0-9]*([\d.]+)/i,
     carbs: /total\s*carb[^0-9]*([0-9]{1,3})(?=\s*g)/i,
     sugar: /sugars?[^0-9]*([\d.]+)/i,
@@ -68,6 +65,11 @@ const extractNutritionData = (text) => {
         nutrition[key] = 0;
       }
     } catch {
+      nutrition[key] = 0;
+    }
+
+    // 🔥 Safety check (avoid garbage OCR like 9999 etc.)
+    if (key !== "calories" && nutrition[key] > 1000) {
       nutrition[key] = 0;
     }
   }
@@ -103,12 +105,18 @@ router.post("/:userId", upload.single("image"), async (req, res) => {
     // preprocess
     await preprocessImage(imagePath);
 
-    // OCR
-    const { data } = await Tesseract.recognize(imagePath, "eng");
+    // 🔥 IMPROVED OCR (better accuracy + restrict characters)
+    const { data } = await Tesseract.recognize(imagePath, "eng", {
+      tessedit_char_whitelist: "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.%gG",
+      logger: m => console.log(m),
+    });
 
     console.log("📜 OCR TEXT:", data.text);
 
-    const nutritionData = extractNutritionData(data.text);
+    // 🔥 CLEAN TEXT (remove noise)
+    const cleanedText = data.text.replace(/[^0-9a-zA-Z.\n ]/g, "");
+
+    const nutritionData = extractNutritionData(cleanedText);
 
     const { caloriesToBurn, stepsNeeded } = calculateBurn(
       nutritionData.calories,
@@ -127,7 +135,7 @@ router.post("/:userId", upload.single("image"), async (req, res) => {
 
     res.json({
       success: true,
-      text: data.text,
+      text: cleanedText,
       nutrition: nutritionData,
       caloriesToBurn,
       stepsNeeded,

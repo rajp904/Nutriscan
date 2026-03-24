@@ -11,7 +11,7 @@ function History({ userId }) {
   const fetchHistory = async () => {
     try {
       const res = await axios.get(
-        `https://nutriscan-god0.onrender.com/${userId}`
+        `https://nutriscan-god0.onrender.com/api/history/${userId}`
       );
       setData(res.data);
     } catch (err) {
