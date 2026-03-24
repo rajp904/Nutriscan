@@ -35,7 +35,7 @@ app.use("/api/ocr", ocrRoutes); // OCR uses multer
 
 // ✅ Root Route (For Testing)
 app.get("/", (req, res) => {
-  res.send("🚀 ScanEats API is running!");   // ← assuming this is your project name
+  res.send("🚀 Nutriscan API is running!");   // ← assuming this is your project name
 });
 
 // ✅ MongoDB Connection (modern way – flags are no longer needed)

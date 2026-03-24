@@ -34,7 +34,7 @@ function App() {
 
       {/* TITLE */}
       <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center">
-        NutriConnect 🔲🍎
+        Nutriscan 🔲🍎
       </h1>
 
       {/* TOP BUTTONS */}
