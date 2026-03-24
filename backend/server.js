@@ -15,7 +15,7 @@ app.use(express.json());
 
 // Improved CORS setup – this fixes most Railway + Vercel issues
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "*",   // Use env var in production → set in Railway dashboard
+  origin: process.env.FRONTEND_URL,   // Use env var in production → set in Railway dashboard
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,                         // Needed if using cookies or auth headers with credentials

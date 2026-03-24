@@ -8,7 +8,7 @@ const Login = ({ setUserId, setShowLogin }) => {
   const handleLogin = async () => {
     try {
       const res = await axios.post(
-        "https://nutriconnect-production.up.railway.app/api/auth/login",
+        "https://nutriscan-god0.onrender.com/api/auth/login",
         { email, password }
       );
 
